@@ -1,0 +1,12 @@
+const assert=require('node:assert/strict');
+const {parse,date,cedula}=require('../static/cedula_parser.js');
+assert.deepEqual(parse('NOMBRES: ANA MARÍA\nAPELLIDOS: DE LA CRUZ\nFECHA DE NACIMIENTO: 12/04/1990\nCÉDULA: 001-1234567-8').values,{FirstName:'ANA MARÍA',LastName:'DE LA CRUZ',BirthDate:'1990-04-12',Cedula:'001-1234567-8'});
+assert.equal(parse('{"FirstName":"Juan José","LastName":"Pérez","BirthDate":"1995-10-20","Cedula":"00112345678"}').values.BirthDate,'1995-10-20');
+assert.equal(parse('NOMBRES\nANA MARÍA\nAPELLIDOS\nPÉREZ\nFECHA DE NACIMIENTO\n12 ABR 1990').values.BirthDate,'1990-04-12');
+assert.deepEqual(parse('00112345678').values,{Cedula:'001-1234567-8'});
+assert.equal(parse('ANA|PEREZ|19900101').values.FirstName,undefined);
+assert.equal(parse('00112345678 00212345678').values.Cedula,'');
+assert.equal(parse('NOMBRES: <script>alert(1)</script>').values.FirstName,undefined);
+assert.equal(date('31/02/1990'),'');assert.equal(date('01/01/2999'),'');assert.equal(date('29/02/2000'),'2000-02-29');
+assert.equal(cedula('001 1234567 8'),'001-1234567-8');assert.equal(cedula('123'),'');
+console.log('Parser: 12 escenarios aprobados');
